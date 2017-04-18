@@ -6,21 +6,25 @@ import java.util.List;
  */
 class Node {
     private Long id;
-    private List<Node> children = new ArrayList<>();
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public List<Node> getChildren() {
         return children;
     }
 
-    public void addChildren(Node ... nodes) {
-        for(Node n  : nodes){
-            children.add(n);
-        }
+    public void setChildren(List<Node> children) {
+        this.children = children;
     }
+
+    private List<Node> children = new ArrayList<>();
+
     public Node(Long id){
         this.id = id;
     }

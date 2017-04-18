@@ -4,105 +4,87 @@ import java.util.*;
  * Created by Your Friend Jesus on 15.04.2017.
  */
 public class Tree {
-    private List<Node> tree_c = new ArrayList<>();
-    private Set<Node> rem_set = new HashSet<>();
-    public List<Node> getTree_c() {
-        return tree_c;
+    private Node root;
+    public Tree(Node root){
+        this.root = root;
     }
-    private List<Node> remList  = new ArrayList<>();
 
-    private void del(Long id, List<Node> s){
-        int count = 0;
-        for(Node n : s){
-            if(n.getId().compareTo(id)==0){
-                count++;
-                rem_set.add(n);
-                rem_set.addAll(n.getChildren());
+    public boolean rem_node(Long id){
+        try{
+            if(root.getId() ==id) {
+                root.setChildren(null);
+                root = null;
+                System.out.println("Node with id " + id + " was removed from tree");
+                return true;
+            }
+            else{
+                Queue<Node> node_queue = new LinkedList<>();
+                node_queue.add(root);
+                while(!node_queue.isEmpty()){
+                    if(node_queue.element().getChildren() != null) {
+                        Iterator<Node> it = node_queue.element().getChildren().iterator();
+                        while(it.hasNext()){
+                            Node node = it.next();
+                            if(node.getId() ==id){
+                                node_queue.element().getChildren().remove(node);
+                                System.out.println("Node with id " + id + " was removed from tree");
+                                return true;
+                            }
+                            else {
+                                node_queue.add(node);
+                            }
+                        }
+                    }
+                    node_queue.remove();
+                }
+                System.out.println("Node with id " + id + " is absent in this tree");
+                return false;
             }
         }
-        if(count==0) {
-            System.out.println("There is no node with this id in the tree.");
+        catch(NullPointerException ex){
+            System.out.println("Node " + id + " or its parent node was already removed.");
+            return false;
         }
     }
-    public void rem_node(Long id){
-        del(id, tree_c);
-        if(rem_set.size()==1){
-            System.out.println("Node is leaf");
+    public Node add_node(Node parent, Long id_node){
+        Node node = new Node(id_node);
+        if(parent.getChildren() == null){
+            parent.setChildren(new ArrayList<>());
         }
-        int cnt = 1;
-        while(!(cnt==0)){
-            cnt=rem_set.size();
-            remList.clear();
-            remList.addAll(rem_set);
-            for(Node r : remList){
-                del(r.getId(), tree_c);
-            }
-            cnt = rem_set.size() - cnt;
-        }
-        for(Node n : rem_set){
-            tree_c.remove(n);
-        }
+        parent.getChildren().add(node);
+        return node;    
     }
-    public void print_list( List<Node> l){
-        int count = 0;
-        for(Node n : l){
-            System.out.print(n.getId() + " | ");
-            count++;
-        }
-        System.out.println();
-        System.out.println("Summary nodes: " + count);
-    }
-    public void add(Node n){
-       tree_c.add(n);
-    }
+
+
+
+
     public static void main(String[] args) {
-        Tree tree = new Tree();
-        Node n1 = new Node(1l);
-        tree.add(n1);
-        Node n2 = new Node(2l);
-        tree.add(n2);
-        Node n3 = new Node(3l);
-        tree.add(n3);
-        Node n4 = new Node(4l);
-        tree.add(n4);
-        Node n5 = new Node(5l);
-        tree.add(n5);
-        Node n6 = new Node(6l);
-        tree.add(n6);
-        Node n7 = new Node(7l);
-        tree.add(n7);
-        Node n8 = new Node(8l);
-        tree.add(n8);
-        Node n9 = new Node(9l);
-        tree.add(n9);
-        Node n10 = new Node(10l);
-        tree.add(n10);
-        Node n11 = new Node(11l);
-        tree.add(n11);
-        Node n12 = new Node(12l);
-        tree.add(n12);
-        Node n13 = new Node(13l);
-        tree.add(n13);
-        Node n14 = new Node(14l);
-        tree.add(n14);
-        Node n15 = new Node(15l);
-        tree.add(n15);
-        Node n16 = new Node(16l);
-        tree.add(n16);
-        n1.addChildren(n2, n3, n4);
-        n2.addChildren(n5, n6);
-        n3.addChildren(n7);
-        n4.addChildren(n8, n9, n10);
-        n6.addChildren(n11, n12);
-        n7.addChildren(n14, n15);
-        n12.addChildren(n13);
-        n15.addChildren(n16);
-        System.out.println("Entire tree");
-        tree.print_list(tree.getTree_c());
-        System.out.println("Changed tree");
-        tree.rem_node(14l);
+        Node n1 = new Node(1L);
+        Tree tree = new Tree(n1);
+        Node n2 =  tree.add_node(n1, 2L);
+        Node n3 =  tree.add_node(n1, 3L);
+        Node n4 =  tree.add_node(n1, 4L);
+        Node n5 =  tree.add_node(n2, 5L);
+        Node n6 =  tree.add_node(n2, 6L);
+        Node n7 =  tree.add_node(n3, 7L);
+        Node n8 =  tree.add_node(n4, 8L);
+        Node n9 =  tree.add_node(n4, 9L);
+        Node n10 = tree.add_node(n4, 10L);
+        Node n11 = tree.add_node(n6, 11L);
+        Node n12 = tree.add_node(n6, 12L);
+        Node n13 = tree.add_node(n12, 13L);
+        Node n14 = tree.add_node(n7, 14L);
+        Node n15 = tree.add_node(n7, 15L);
+        Node n16 = tree.add_node(n15, 16L);
 
 
-        tree.print_list(tree.getTree_c());
+        tree.rem_node(16L);
+        tree.rem_node(12L);
+        tree.rem_node(11L);
+        tree.rem_node(6L);
+        tree.rem_node(2L);
+        tree.rem_node(1L);
+        tree.rem_node(15L);
+
     }
 }
